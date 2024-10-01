@@ -14,20 +14,20 @@ data "aws_eks_cluster_auth" "eks_auth" {
 
 # Fetch the existing VPC by ID or tag
 data "aws_vpc" "existing_vpc" {
-  id = "vpc-0bc15cb5a627223d8"
+  id = "vpc-0cbc562f0dbc5383c"
 }
 
 # Fetch existing subnets by their IDs or tags
 data "aws_subnet" "eks_subnet_1" {
-  id = "subnet-0746ee3611852cffc"
+  id = "subnet-064b5e2fe115d0d82"
 }
 
 data "aws_subnet" "eks_subnet_2" {
-  id = "subnet-0dd9437b090eed621"
+  id = "subnet-04c48d827ed298f99"
 }
 
 data "aws_subnet" "eks_subnet_3" {
-  id = "subnet-052766066bbac2ec1"
+  id = "subnet-0558995ce4b8f9073"
 }
 
 resource "aws_iam_role" "eks_role" {
@@ -100,8 +100,7 @@ resource "aws_iam_role_policy" "eks_k8s_access" {
           "eks:UpdateNodegroupConfig",
           "eks:ListNodegroups",
           "eks:DescribeNodegroup",
-          "eks:DescribeNodegroup",
-          "ec2:DescribeInstances",  // if you want EC2 instance access for node groups
+          "ec2:DescribeInstances",
           "ec2:DescribeSubnets",
           "ec2:DescribeSecurityGroups"
         ]
@@ -112,7 +111,7 @@ resource "aws_iam_role_policy" "eks_k8s_access" {
 }
 
 resource "aws_eks_cluster" "eks_cluster" {
-  name     = "cluster-challenge"
+  name     = "challenge"
   role_arn = aws_iam_role.eks_role.arn
 
   vpc_config {
@@ -126,7 +125,7 @@ resource "aws_eks_cluster" "eks_cluster" {
 
 resource "aws_eks_node_group" "node_group" {
   cluster_name    = aws_eks_cluster.eks_cluster.name
-  node_group_name = "app-mysql-nodes"
+  node_group_name = "app-nodes"
   node_role_arn   = aws_iam_role.worker_role.arn
   subnet_ids      = [
         data.aws_subnet.eks_subnet_1.id, 
